@@ -1,66 +1,68 @@
 export default function handler(req, res) {
     const user = req.query.user || 'Der User';
     const date = new Date().toISOString().slice(0, 10);
-    const seed = user.toLowerCase() + date + "iq-dark"; 
+    const seed = user.toLowerCase() + date + "iq-ultra"; 
     
     let hash = 0;
     for (let i = 0; i < seed.length; i++) {
         hash = seed.charCodeAt(i) + ((hash << 5) - hash);
     }
     
-    // Bereich 20 bis 200
-    const iq = Math.abs(hash % 181) + 20;
+    const iq = Math.abs(hash % 181) + 20; // 20 bis 200
     let message = "";
 
     const jokes = {
-        low: [
-            "Atmen und Laufen gleichzeitig ist für dich ein Endgegner-Level.",
-            "Dein Stammbaum ist wohl ein Kreis.",
-            "Respekt, dass du den Einschaltknopf am PC gefunden hast.",
-            "In deinem Kopf spielt ein einsames Äffchen Becken-Zymbeln.",
-            "Sogar eine Amöbe würde dich beim Memory-Spielen abziehen."
+        step1: [ // 20-40
+            "Du rührst deinen Kaffee wahrscheinlich mit dem Finger um und wunderst dich, warum er nass wird",
+            "Dein Gehirn hat wohl Urlaub genommen oder.",
+            "Pleyz 2.0",
+            "Geistige Behinderung, kannst du das buchstabieren?"
         ],
-        midLow: [
+        step2: [ // 41-60
             "Du bist der Grund, warum auf Shampoo-Flaschen eine Anleitung steht.",
             "Dein Gehirn ist wie Internet Explorer – braucht ewig und stürzt dann ab.",
-            "Du bist nicht dumm, du hast nur Pech beim Denken.",
             "Schon mal über eine Karriere als Türstopper nachgedacht?",
-            "Immerhin musst du dir keine Sorgen um Gehirnwäsche machen."
+            "Du versuchst wahrscheinlich, M&Ms nach Alphabet zu sortieren."
         ],
-        average: [
-            "Glückwunsch, du bist der Inbegriff von Mittelmaß.",
+        step3: [ // 61-80
+            "Zimmertemperatur erreicht. Stabil für RTL2.",
+            "Du bist nicht dumm, du hast nur Pech beim Denken.",
+            "Du verstehst bei Filmen mit Untertiteln nur die Bilder.",
+            "Du drückst an der Tür wo ziehen steht."
+        ],
+        step4: [ // 81-100
+            "Du bist so normal, dass du in einer Menschenmenge unsichtbar wirst.",
             "Dein IQ ist wie ein Standard-NPC: Einfach nur da.",
-            "Du bist so durchschnittlich, dass man dich in der Menge sofort vergisst.",
-            "Reicht gerade so, um nicht in der Evolution aussortiert zu werden.",
-            "Dein Leben ist wohl so spannend wie eine Raufasertapete."
+            "Wenn Dummheit wehtun würde, würdest du permamant schreien.",
+            "Du bist der NPC in deinem eigenen Leben."
         ],
-        high: [
-            "Ganz ordentlich, du verstehst sogar Witze ohne Erklärung.",
-            "Du bist offiziell zu schlau für den Durchschnittschat.",
-            "Pass auf, dein Kopf könnte bei so viel Denken überhitzen.",
-            "Endlich mal jemand, der nicht nur Klotür-Sprüche zitiert.",
-            "Stabile Leistung, aber für die Weltherrschaft reicht es noch nicht."
+        step5: [ // 101-120
+            "Stabil! Du verstehst sogar Witze ohne Erklärung.",
+            "Du bist schlau genug, um alles besser zu wissen, aber zu dumm, um es zu beweisen.",
+            "Stabil, da ist Potenzial da. Aber für mehr reicht es nicht.",
+            "Schlauer als der Durchschnitt, aber immer noch hier im Stream."
         ],
-        genius: [
-            "Absolutes Genie – was machst du eigentlich in diesem Stream?",
+        step6: [ // 121-150
+            "Tmm, wir haben einen Schlaumeier hier.",
+            "100% Alman.",
+            "Professor Modus aktiviert. Geh mal was Sinnvolles arbeiten.",
+            "Endlich mal jemand, der nicht nur Klotür-Sprüche zitiert."
+        ],
+        step7: [ // 151-200
+            "Dein Gehirn ist so groß, dass es bald eine eigene Baugenehmigung braucht.",
             "Du siehst die Matrix, während die anderen noch im Sandkasten spielen.",
-            "Dein IQ ist höher als die Abonnenten-Zahl mancher Streamer hier.",
-            "Du hast das System gedribbelt, Legende!",
-            "Wahrscheinlich bist du derjenige, der die Quantenphysik beim Kacken gelöst hat."
+            "Cüsh??! Sogar Einstein will dir einen blasen.",
+            "Du hast wahrscheinlich die Quantenphysik beim Kacken gelöst."
         ]
     };
 
-    if (iq <= 40) {
-        message = jokes.low[Math.floor(Math.random() * jokes.low.length)];
-    } else if (iq <= 80) {
-        message = jokes.midLow[Math.floor(Math.random() * jokes.midLow.length)];
-    } else if (iq <= 100) {
-        message = jokes.average[Math.floor(Math.random() * jokes.average.length)];
-    } else if (iq <= 120) {
-        message = jokes.high[Math.floor(Math.random() * jokes.high.length)];
-    } else {
-        message = jokes.genius[Math.floor(Math.random() * jokes.genius.length)];
-    }
+    if (iq <= 40) message = jokes.step1[Math.floor(Math.random() * jokes.step1.length)];
+    else if (iq <= 60) message = jokes.step2[Math.floor(Math.random() * jokes.step2.length)];
+    else if (iq <= 80) message = jokes.step3[Math.floor(Math.random() * jokes.step3.length)];
+    else if (iq <= 100) message = jokes.step4[Math.floor(Math.random() * jokes.step4.length)];
+    else if (iq <= 120) message = jokes.step5[Math.floor(Math.random() * jokes.step5.length)];
+    else if (iq <= 150) message = jokes.step6[Math.floor(Math.random() * jokes.step6.length)];
+    else message = jokes.step7[Math.floor(Math.random() * jokes.step7.length)];
 
     res.status(200).send(`[IQ-Test] ${user} hat heute einen IQ von ${iq}. ${message}`);
 }
