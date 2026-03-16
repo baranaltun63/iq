@@ -1,6 +1,11 @@
 export default function handler(req, res) {
+    // WICHTIG: Verhindert, dass StreamElements die Antwort zwischenspeichert
+    res.setHeader('Cache-Control', 'no-store, max-age=0');
+
     const user = req.query.user || 'Der User';
     const date = new Date().toISOString().slice(0, 10);
+    
+    // Der Seed sorgt dafür, dass der IQ für den User heute gleich bleibt
     const seed = user.toLowerCase() + date + "iq-ultra"; 
     
     let hash = 0;
@@ -8,15 +13,16 @@ export default function handler(req, res) {
         hash = seed.charCodeAt(i) + ((hash << 5) - hash);
     }
     
-    const iq = Math.abs(hash % 181) + 20; // 20 bis 200
+    // IQ-Berechnung (20 bis 200) - bleibt für heute pro User fix
+    const iq = Math.abs(hash % 181) + 20; 
     let message = "";
 
     const jokes = {
         step1: [ // 20-40
-            "Du rührst deinen Kaffee wahrscheinlich mit dem Finger um und wunderst dich, warum er nass wird",
-            "Dein Gehirn hat wohl Urlaub genommen oder.",
-            "Pleyz 2.0",
-            "Geistige Behinderung, kannst du das buchstabieren?"
+            "Du rührst deinen Kaffee wahrscheinlich mit dem Finger um und wunderst dich, warum er nass wird.",
+            "Dein Gehirn hat wohl Urlaub genommen.",
+            "Dein IQ ist so niedrig, er braucht eine Taucherausrüstung, um nicht zu ertrinken.",
+            "Ein Wunder, dass du die Tastatur gefunden hast."
         ],
         step2: [ // 41-60
             "Du bist der Grund, warum auf Shampoo-Flaschen eine Anleitung steht.",
@@ -28,12 +34,12 @@ export default function handler(req, res) {
             "Zimmertemperatur erreicht. Stabil für RTL2.",
             "Du bist nicht dumm, du hast nur Pech beim Denken.",
             "Du verstehst bei Filmen mit Untertiteln nur die Bilder.",
-            "Du drückst an der Tür wo ziehen steht."
+            "Du drückst an der Tür, wo 'Ziehen' steht."
         ],
         step4: [ // 81-100
             "Du bist so normal, dass du in einer Menschenmenge unsichtbar wirst.",
             "Dein IQ ist wie ein Standard-NPC: Einfach nur da.",
-            "Wenn Dummheit wehtun würde, würdest du permamant schreien.",
+            "Wenn Dummheit wehtun würde, würdest du permanent schreien.",
             "Du bist der NPC in deinem eigenen Leben."
         ],
         step5: [ // 101-120
@@ -44,18 +50,19 @@ export default function handler(req, res) {
         ],
         step6: [ // 121-150
             "Tmm, wir haben einen Schlaumeier hier.",
-            "100% Alman.",
+            "100% Alman-Intelligenz am Start.",
             "Professor Modus aktiviert. Geh mal was Sinnvolles arbeiten.",
             "Endlich mal jemand, der nicht nur Klotür-Sprüche zitiert."
         ],
         step7: [ // 151-200
             "Dein Gehirn ist so groß, dass es bald eine eigene Baugenehmigung braucht.",
             "Du siehst die Matrix, während die anderen noch im Sandkasten spielen.",
-            "Cüsh??! Sogar Einstein will dir einen blasen.",
+            "Heftig! Sogar Einstein würde dich nach Nachhilfe fragen.",
             "Du hast wahrscheinlich die Quantenphysik beim Kacken gelöst."
         ]
     };
 
+    // Die Auswahl der Nachricht erfolgt zufällig innerhalb der Gruppe
     if (iq <= 40) message = jokes.step1[Math.floor(Math.random() * jokes.step1.length)];
     else if (iq <= 60) message = jokes.step2[Math.floor(Math.random() * jokes.step2.length)];
     else if (iq <= 80) message = jokes.step3[Math.floor(Math.random() * jokes.step3.length)];
